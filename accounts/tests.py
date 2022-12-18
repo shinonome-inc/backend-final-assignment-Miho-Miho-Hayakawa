@@ -104,6 +104,8 @@ class TestSignUpView(TestCase):
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 1)
+        form = response.context["form"]
+        self.assertEqual(form.errors["username"], ["同じユーザー名が既に登録済みです。"])
 
     def test_failure_post_with_invalid_email(self):
         data = {
@@ -115,39 +117,47 @@ class TestSignUpView(TestCase):
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
+        form = response.context["form"]
+        self.assertEqual(form.errors["email"], ["有効なメールアドレスを入力してください。"])
 
     def test_failure_post_with_too_short_password(self):
         data = {
             "username": "test",
             "email": "test@example.com",
-            "password1": "abcd",
-            "password2": "abcd",
+            "password1": "sjci",
+            "password2": "sjci",
         }
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
+        form = response.context["form"]
+        self.assertEqual(form.errors["password2"], ["このパスワードは短すぎます。最低 8 文字以上必要です。"])
 
     def test_failure_post_with_password_similar_to_username(self):
         data = {
-            "username": "test",
+            "username": "cjigsefg",
             "email": "test@example.com",
-            "password1": "test",
-            "password2": "test",
+            "password1": "cjigsefg",
+            "password2": "cjigsefg",
         }
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
+        form = response.context["form"]
+        self.assertEqual(form.errors["password2"], ["このパスワードは ユーザー名 と似すぎています。"])
 
     def test_failure_post_with_only_numbers_password(self):
         data = {
             "username": "test",
             "email": "test@example.com",
-            "password1": "271828",
-            "password2": "271828",
+            "password1": "27182818",
+            "password2": "27182818",
         }
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
+        form = response.context["form"]
+        self.assertEqual(form.errors["password2"], ["このパスワードは数字しか使われていません。"])
 
     def test_failure_post_with_mismatch_password(self):
         data = {
@@ -159,6 +169,8 @@ class TestSignUpView(TestCase):
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
+        form = response.context["form"]
+        self.assertEqual(form.errors["password2"], ["確認用パスワードが一致しません。"])
 
 
 class TestLoginView(TestCase):
