@@ -1,8 +1,9 @@
 from django.views import generic
-from .models import User
+from django.contrib.auth import get_user_model
 from .forms import SignUpForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
+User = get_user_model()
 
 
 class SignUpView(generic.CreateView):
