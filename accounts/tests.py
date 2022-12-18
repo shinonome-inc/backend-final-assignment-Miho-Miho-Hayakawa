@@ -43,10 +43,11 @@ class TestSignUpView(TestCase):
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
-        self.assertFormError(response, "form", "username", ["このフィールドは必須です。"])
-        self.assertFormError(response, "form", "email", ["このフィールドは必須です。"])
-        self.assertFormError(response, "form", "password1", ["このフィールドは必須です。"])
-        self.assertFormError(response, "form", "password2", ["このフィールドは必須です。"])
+        form = response.context["form"]
+        self.assertEqual(form.errors["username"], ["このフィールドは必須です。"])
+        self.assertEqual(form.errors["email"], ["このフィールドは必須です。"])
+        self.assertEqual(form.errors["password1"], ["このフィールドは必須です。"])
+        self.assertEqual(form.errors["password2"], ["このフィールドは必須です。"])
 
     def test_failure_post_with_empty_username(self):
         data = {
@@ -58,7 +59,8 @@ class TestSignUpView(TestCase):
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
-        self.assertFormError(response, "form", "username", ["このフィールドは必須です。"])
+        form = response.context["form"]
+        self.assertEqual(form.errors["username"], ["このフィールドは必須です。"])
 
     def test_failure_post_with_empty_email(self):
         data = {
@@ -70,7 +72,8 @@ class TestSignUpView(TestCase):
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
-        self.assertFormError(response, "form", "email", ["このフィールドは必須です。"])
+        form = response.context["form"]
+        self.assertEqual(form.errors["email"], ["このフィールドは必須です。"])
 
     def test_failure_post_with_empty_password(self):
         data = {
@@ -82,8 +85,9 @@ class TestSignUpView(TestCase):
         response = self.client.post(reverse("accounts:signup"), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
-        self.assertFormError(response, "form", "password1", "このフィールドは必須です。")
-        self.assertFormError(response, "form", "password2", "このフィールドは必須です。")
+        form = response.context["form"]
+        self.assertEqual(form.errors["password1"], ["このフィールドは必須です。"])
+        self.assertEqual(form.errors["password2"], ["このフィールドは必須です。"])
 
     def test_failure_post_with_duplicated_user(self):
         User.objects.create_user(
