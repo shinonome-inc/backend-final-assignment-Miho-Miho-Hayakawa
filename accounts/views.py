@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from .forms import SignUpForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
+
 User = get_user_model()
 
 
@@ -10,7 +11,7 @@ class SignUpView(generic.CreateView):
     form_class = SignUpForm
     template_name = "accounts/signup.html"
     model = User
-    success_url = reverse_lazy('tweets:home')
+    success_url = reverse_lazy("tweets:home")
 
     def form_valid(self, form):
         response = super().form_valid(form)
