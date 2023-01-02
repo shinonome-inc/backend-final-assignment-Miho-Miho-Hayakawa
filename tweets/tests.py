@@ -1,9 +1,11 @@
 from django.test import TestCase
+from django.urls import reverse
 
 
 class TestHomeView(TestCase):
     def test_success_get(self):
-        pass
+        res = self.client.get(reverse("accounts:signup"))
+        self.assertEqual(res.status_code, 200)
 
 
 class TestTweetCreateView(TestCase):
