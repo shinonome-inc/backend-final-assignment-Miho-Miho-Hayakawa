@@ -224,9 +224,12 @@ class TestLoginView(TestCase):
 
 
 class TestLogoutView(TestCase):
-    def test_success_post(self):
+    def setUp(self):
         user = User.objects.create_user(username="test", email="test@example.com", password="testuser")
         self.client.force_login(user)
+
+    def test_success_post(self):
+
         response = self.client.post(reverse("accounts:logout"))
 
         self.assertRedirects(

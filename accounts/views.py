@@ -1,13 +1,11 @@
-from django.contrib.auth import authenticate, get_user_model, login
 from django.conf import settings
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
-
 from .forms import SignUpForm
-
 
 User = get_user_model()
 
