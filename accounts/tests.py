@@ -21,7 +21,7 @@ class TestSignUpView(TestCase):
         res = self.client.post(reverse("accounts:signup"), data)
         self.assertRedirects(
             res,
-            reverse("tweets:home"),
+            reverse(settings.LOGIN_REDIRECT_URL),
             status_code=302,
             target_status_code=200,
         )
