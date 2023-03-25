@@ -229,7 +229,6 @@ class TestLogoutView(TestCase):
         self.client.force_login(user)
 
     def test_success_post(self):
-
         response = self.client.post(reverse("accounts:logout"))
 
         self.assertRedirects(
