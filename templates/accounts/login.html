@@ -1,0 +1,14 @@
+{% extends "common/base.html" %}
+{% block title %}ログイン{% endblock %}
+{% block content %}
+    <form method="post">
+        {{ form }}
+        {% csrf_token %}
+        <button type="submit">ログイン</button>
+    </form>
+    <section>
+        <p>
+            または<a href="{% url 'accounts:signup' %}">サインアップ</a>
+        </p>
+    </section>
+{% endblock %}
